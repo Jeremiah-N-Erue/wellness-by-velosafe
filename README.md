@@ -7,6 +7,21 @@ bookings, and provider-logged progress tracking.
 
 Built by [Velosafe Technologies Ltd](https://github.com/).
 
+## 🔗 Live demo
+
+**App:** **[wellness-by-velosafe.onrender.com](https://wellness-by-velosafe.onrender.com)**
+**API:** [wellness-by-velosafe-api.onrender.com/health](https://wellness-by-velosafe-api.onrender.com/health)
+
+Try it with a seeded account — see [Seeded accounts](#seeded-accounts-password-password123-for-all) below
+(e.g. `client@example.com` / `password123`), or sign up fresh. The API is on a free instance
+that sleeps after ~15 minutes of inactivity, so the first request after a quiet period can
+take up to a minute to wake up — that's expected, not a bug.
+
+<p>
+  <img src="docs/screenshots/homepage.jpg" alt="Wellness by VeloSafe landing page" width="420" />
+  <img src="docs/screenshots/discover.jpg" alt="Provider discovery page with verified providers in Vietnam and Nigeria" width="420" />
+</p>
+
 ## What's real in this MVP
 
 - **Accounts & auth** — JWT-based, client/provider/admin roles.
