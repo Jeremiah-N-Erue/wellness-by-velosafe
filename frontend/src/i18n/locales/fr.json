@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "discover": "Découvrir",
+    "myDashboard": "Mon tableau de bord",
+    "providerConsole": "Espace prestataire",
+    "messages": "Messages",
+    "logout": "Se déconnecter",
+    "login": "Se connecter",
+    "signup": "S'inscrire"
+  },
+  "home": {
+    "heroTitle": "Des prestataires de bien-être au Vietnam et au Nigeria, en un clic.",
+    "heroSubtitle": "Les coachs personnels, instructeurs de yoga et coachs bien-être sont dispersés entre salles de sport et réseaux sociaux. Wellness by VeloSafe réunit des prestataires vérifiés, des réservations par pack de crédits et un vrai suivi de progression en un seul endroit.",
+    "browseProviders": "Parcourir les prestataires",
+    "joinAsProvider": "Rejoindre en tant que prestataire",
+    "feature1Title": "Vérifiés, pas seulement référencés",
+    "feature1Body": "Chaque prestataire passe par une vérification d'identité, de certification et de références avant de pouvoir être réservé.",
+    "feature2Title": "Packs de crédits, sans facturation surprise",
+    "feature2Body": "Achetez des crédits une seule fois, réservez des séances au fur et à mesure — aucun abonnement à penser à annuler.",
+    "feature3Title": "Progression vérifiée",
+    "feature3Body": "Votre prestataire enregistre une progression réelle et structurée après chaque séance — jamais auto-déclarée."
+  },
+  "login": {
+    "title": "Se connecter",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "submitting": "Connexion…",
+    "noAccount": "Pas de compte ?",
+    "signUp": "S'inscrire"
+  },
+  "register": {
+    "title": "Créer un compte",
+    "subtitle": "Inscrivez-vous en tant que client à la recherche d'un coach, ou en tant que prestataire bien-être.",
+    "roleLabel": "Je suis…",
+    "roleClient": "Client — à la recherche d'un prestataire",
+    "roleProvider": "Prestataire — coach sportif / yoga / bien-être",
+    "name": "Nom complet",
+    "email": "E-mail",
+    "password": "Mot de passe (8 caractères min.)",
+    "submit": "Créer un compte",
+    "submitting": "Création du compte…",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "login": "Se connecter"
+  },
+  "discover": {
+    "title": "Trouver un prestataire bien-être",
+    "subtitle": "Le bien-être est aujourd'hui le seul secteur entièrement développé — les autres catégories visibles ici ne sont que des exemples prouvant que le modèle de données de la plateforme ne se limite pas au bien-être.",
+    "market": "Marché",
+    "allMarkets": "Tous les marchés actifs",
+    "comingSoon": "bientôt disponible",
+    "category": "Catégorie",
+    "allCategories": "Toutes les catégories actives",
+    "search": "Rechercher",
+    "searchPlaceholder": "ex. yoga, renforcement, Vinyasa…",
+    "loading": "Chargement des prestataires…",
+    "empty": "Aucun prestataire ne correspond pour le moment.",
+    "verified": "Vérifié",
+    "notVerified": "Pas encore vérifié",
+    "yrsExperience": "ans d'expérience",
+    "sessionsCompleted": "séances terminées"
+  }
+}

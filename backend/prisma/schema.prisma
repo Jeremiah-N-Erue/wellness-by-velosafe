@@ -1,0 +1,277 @@
+// Wellness by VeloSafe — Prisma schema
+// Data model is deliberately category-agnostic AND country-agnostic at the top level
+// (User, ServiceCategory, Country, ProviderProfile, Service, Booking, Payment) so new
+// verticals (tours, visa/relocation help, real estate, etc.) and new markets can be added
+// later without a schema rewrite.
+//
+// Only the WELLNESS category ships with its full operating model wired up in this MVP:
+// 3-tier verification, credit packs, the Progress & Goals engine, and filtered messaging.
+// A ServiceCategory row's feature flags (hasProgressTracking, requiresVerification) say
+// which of that machinery applies — a future category can opt in or stay simple.
+//
+// Vietnam and Nigeria are both live markets in this MVP (Velosafe Technologies Ltd is
+// itself Nigerian-registered, which actually makes Nigeria the more legally
+// straightforward market for a real payment integration — see docs/architecture.md).
+// Credit packs, balances, and payments are all scoped per-country since a VND credit
+// can't be spent against an NGN-priced session.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CLIENT
+  PROVIDER
+  ADMIN
+}
+
+enum VerificationTier {
+  NONE
+  TIER_1_BASELINE
+  TIER_2_VERIFIED
+  TIER_3_TRUSTED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum PaymentProvider {
+  MOCK
+  MOMO
+  ZALOPAY
+  VNPAY
+  PAYSTACK
+  FLUTTERWAVE
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         UserRole @default(CLIENT)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  providerProfile ProviderProfile?
+
+  creditLedger   CreditLedgerEntry[]
+  payments       Payment[]
+  bookingsAsClient Booking[] @relation("ClientBookings")
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  clientConversations   Conversation[] @relation("ClientConversations")
+  progressAsClient ProgressLog[] @relation("ClientProgress")
+}
+
+// A service vertical. WELLNESS is the only one fully built out in this MVP;
+// others can be added as data without touching the verification/progress code paths
+// unless their flags turn that machinery on.
+model ServiceCategory {
+  id                   String   @id @default(cuid())
+  slug                 String   @unique
+  name                 String
+  description          String
+  isActive             Boolean  @default(true)
+  requiresVerification Boolean  @default(false)
+  hasProgressTracking  Boolean  @default(false)
+  createdAt            DateTime @default(now())
+
+  providers ProviderProfile[]
+}
+
+// A supported market. Vietnam and Nigeria are both active; a few more are seeded as
+// "coming soon" (isActive: false) to prove the option genuinely exists, not just VN+NG
+// hardcoded with an extra label.
+model Country {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  isoCode   String   @unique // ISO 3166-1 alpha-2, e.g. "VN", "NG"
+  currency  String   // ISO 4217, e.g. "VND", "NGN"
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  providers   ProviderProfile[]
+  creditPacks CreditPack[]
+  ledgerEntries CreditLedgerEntry[]
+}
+
+model ProviderProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  categoryId  String
+  category    ServiceCategory @relation(fields: [categoryId], references: [id])
+  countryId   String
+  country     Country  @relation(fields: [countryId], references: [id])
+  city        String
+  headline    String
+  bio         String
+  yearsExperience Int   @default(0)
+  verificationTier VerificationTier @default(NONE)
+  trustScore  Float    @default(0)
+  sessionCount Int     @default(0)
+  noShowCount  Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  services           Service[]
+  verificationRecord VerificationRecord?
+  bookings           Booking[]
+  progressLogs       ProgressLog[] @relation("ProviderProgress")
+  conversations      Conversation[] @relation("ProviderConversations")
+}
+
+model VerificationRecord {
+  id                    String   @id @default(cuid())
+  providerId            String   @unique
+  provider              ProviderProfile @relation(fields: [providerId], references: [id])
+  idDocumentVerified     Boolean @default(false)
+  certificationVerified  Boolean @default(false)
+  referenceContactName   String?
+  referenceContactPhone  String?
+  referenceContactStatus String  @default("PENDING") // PENDING, CONTACTED, CONFIRMED, FAILED
+  codeOfConductSignedAt  DateTime?
+  waiverSignedAt         DateTime?
+  tier1CompletedAt       DateTime?
+  notes                  String?
+  updatedAt              DateTime @updatedAt
+}
+
+model Service {
+  id           String   @id @default(cuid())
+  providerId   String
+  provider     ProviderProfile @relation(fields: [providerId], references: [id])
+  title        String
+  description  String
+  durationMins Int      @default(60)
+  creditCost   Int      @default(1)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  bookings Booking[]
+}
+
+model CreditPack {
+  id           String   @id @default(cuid())
+  countryId    String
+  country      Country  @relation(fields: [countryId], references: [id])
+  name         String
+  credits      Int
+  price        Int      // in the country's currency (whole units — VND/NGN don't need decimals)
+  validityDays Int      @default(180) // 6 months, per documented 6-12mo policy
+  isActive     Boolean  @default(true)
+
+  payments Payment[]
+}
+
+// A balance is scoped per-country — a VND credit can't pay for an NGN-priced session.
+model CreditLedgerEntry {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  countryId      String
+  country        Country  @relation(fields: [countryId], references: [id])
+  delta          Int      // positive = credit added, negative = spent
+  balanceAfter   Int      // balance after this entry, within this country only
+  reason         String   // PURCHASE, BOOKING_CHARGE, BOOKING_REFUND, EXPIRY, GOODWILL
+  relatedBookingId String?
+  relatedPaymentId String?
+  expiresAt      DateTime?
+  createdAt      DateTime @default(now())
+}
+
+model Payment {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  creditPackId String
+  creditPack   CreditPack @relation(fields: [creditPackId], references: [id])
+  provider     PaymentProvider @default(MOCK)
+  amount       Int      // in the credit pack's country's currency
+  status       PaymentStatus @default(PENDING)
+  externalRef  String?  // where a real MoMo/ZaloPay/Paystack/Flutterwave transaction id would live
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Booking {
+  id             String   @id @default(cuid())
+  clientId       String
+  client         User     @relation("ClientBookings", fields: [clientId], references: [id])
+  providerId     String
+  provider       ProviderProfile @relation(fields: [providerId], references: [id])
+  serviceId      String
+  service        Service  @relation(fields: [serviceId], references: [id])
+  scheduledAt    DateTime
+  status         BookingStatus @default(PENDING)
+  creditsCharged Int
+  goalText       String?  // client's stated goal at booking time, feeds the Progress engine
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  progressLog ProgressLog?
+}
+
+// Provider-entered, client-visible. This is the "Verified Progress" differentiator —
+// never self-reported by the client.
+model ProgressLog {
+  id                      String   @id @default(cuid())
+  bookingId               String   @unique
+  booking                 Booking  @relation(fields: [bookingId], references: [id])
+  providerId              String
+  provider                ProviderProfile @relation("ProviderProgress", fields: [providerId], references: [id])
+  clientId                String
+  client                  User     @relation("ClientProgress", fields: [clientId], references: [id])
+  sessionNotes            String
+  goalProgressSummary     String
+  recommendedNextSessions Int?     // transparent, explainable recommendation — not a black box
+  recommendationRationale String?
+  clientAcknowledgedAt    DateTime?
+  createdAt               DateTime @default(now())
+}
+
+model Conversation {
+  id         String   @id @default(cuid())
+  clientId   String
+  client     User     @relation("ClientConversations", fields: [clientId], references: [id])
+  providerId String
+  provider   ProviderProfile @relation("ProviderConversations", fields: [providerId], references: [id])
+  stage      String   @default("PRE_BOOKING") // PRE_BOOKING (text-only, filtered) | POST_BOOKING (fuller)
+  createdAt  DateTime @default(now())
+
+  messages Message[]
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  senderId       String
+  sender         User     @relation("SentMessages", fields: [senderId], references: [id])
+  recipientId    String
+  recipient      User     @relation("ReceivedMessages", fields: [recipientId], references: [id])
+  body           String   // original, as typed
+  filteredBody   String   // what the recipient actually sees
+  wasFiltered    Boolean  @default(false)
+  createdAt      DateTime @default(now())
+}

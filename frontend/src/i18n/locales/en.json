@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "discover": "Discover",
+    "myDashboard": "My Dashboard",
+    "providerConsole": "Provider Console",
+    "messages": "Messages",
+    "logout": "Log out",
+    "login": "Log in",
+    "signup": "Sign up"
+  },
+  "home": {
+    "heroTitle": "Wellness providers in Vietnam and Nigeria, one click away.",
+    "heroSubtitle": "Personal trainers, yoga instructors, and wellness coaches are scattered across gyms and social media. Wellness by VeloSafe brings verified providers, credit-pack bookings, and real progress tracking into one place.",
+    "browseProviders": "Browse providers",
+    "joinAsProvider": "Join as a provider",
+    "feature1Title": "Verified, not just listed",
+    "feature1Body": "Every provider goes through ID, certification, and reference checks before they're bookable.",
+    "feature2Title": "Credit packs, no surprise billing",
+    "feature2Body": "Buy credits once, book sessions as you go — no subscriptions to forget to cancel.",
+    "feature3Title": "Verified Progress",
+    "feature3Body": "Your provider logs real, structured progress after every session — never self-reported."
+  },
+  "login": {
+    "title": "Log in",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Log in",
+    "submitting": "Logging in…",
+    "noAccount": "No account?",
+    "signUp": "Sign up"
+  },
+  "register": {
+    "title": "Create an account",
+    "subtitle": "Join as a client looking for a trainer/coach, or as a wellness provider.",
+    "roleLabel": "I am a…",
+    "roleClient": "Client — looking for a provider",
+    "roleProvider": "Provider — PT / yoga / wellness coach",
+    "name": "Full name",
+    "email": "Email",
+    "password": "Password (min. 8 characters)",
+    "submit": "Create account",
+    "submitting": "Creating account…",
+    "haveAccount": "Already have an account?",
+    "login": "Log in"
+  },
+  "discover": {
+    "title": "Find a wellness provider",
+    "subtitle": "Wellness is the only fully-built vertical today — other categories you see here are placeholders proving the platform's data model isn't locked to wellness alone.",
+    "market": "Market",
+    "allMarkets": "All active markets",
+    "comingSoon": "coming soon",
+    "category": "Category",
+    "allCategories": "All active categories",
+    "search": "Search",
+    "searchPlaceholder": "e.g. yoga, strength, Vinyasa…",
+    "loading": "Loading providers…",
+    "empty": "No providers match yet.",
+    "verified": "Verified",
+    "notVerified": "Not yet verified",
+    "yrsExperience": "yrs experience",
+    "sessionsCompleted": "sessions completed"
+  }
+}

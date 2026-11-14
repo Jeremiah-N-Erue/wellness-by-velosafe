@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "discover": "发现",
+    "myDashboard": "我的主页",
+    "providerConsole": "服务者后台",
+    "messages": "消息",
+    "logout": "退出登录",
+    "login": "登录",
+    "signup": "注册"
+  },
+  "home": {
+    "heroTitle": "越南和尼日利亚的健康服务提供者,一键即达。",
+    "heroSubtitle": "私人教练、瑜伽老师和健康教练目前分散在各个健身房和社交媒体上。Wellness by VeloSafe 将经过验证的服务者、积分套餐预约和真实的进度跟踪集中到一个平台。",
+    "browseProviders": "浏览服务者",
+    "joinAsProvider": "作为服务者加入",
+    "feature1Title": "经过验证,而非仅是列出",
+    "feature1Body": "每位服务者在可被预约之前,都需要通过身份证件、资质证书和推荐人核实。",
+    "feature2Title": "积分套餐,没有意外扣费",
+    "feature2Body": "一次购买积分,随时预约课程 —— 没有需要记得取消的订阅。",
+    "feature3Title": "已验证的进度",
+    "feature3Body": "您的服务者会在每次课程后记录真实、结构化的进度 —— 绝非自我报告。"
+  },
+  "login": {
+    "title": "登录",
+    "email": "电子邮箱",
+    "password": "密码",
+    "submit": "登录",
+    "submitting": "正在登录…",
+    "noAccount": "还没有账户?",
+    "signUp": "注册"
+  },
+  "register": {
+    "title": "创建账户",
+    "subtitle": "以寻找教练的客户身份加入,或以健康服务者身份加入。",
+    "roleLabel": "我是…",
+    "roleClient": "客户 —— 正在寻找服务者",
+    "roleProvider": "服务者 —— 私教 / 瑜伽 / 健康教练",
+    "name": "姓名",
+    "email": "电子邮箱",
+    "password": "密码(至少8个字符)",
+    "submit": "创建账户",
+    "submitting": "正在创建账户…",
+    "haveAccount": "已经有账户了?",
+    "login": "登录"
+  },
+  "discover": {
+    "title": "寻找健康服务者",
+    "subtitle": "目前只有健康与健身这一类别被完整搭建 —— 您在此看到的其他类别只是示例,用以证明平台的数据模型并不局限于健康领域。",
+    "market": "市场",
+    "allMarkets": "所有活跃市场",
+    "comingSoon": "即将推出",
+    "category": "类别",
+    "allCategories": "所有活跃类别",
+    "search": "搜索",
+    "searchPlaceholder": "例如:瑜伽、力量训练、Vinyasa…",
+    "loading": "正在加载服务者…",
+    "empty": "暂无匹配的服务者。",
+    "verified": "已验证",
+    "notVerified": "尚未验证",
+    "yrsExperience": "年经验",
+    "sessionsCompleted": "次已完成课程"
+  }
+}

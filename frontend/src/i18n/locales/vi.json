@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "discover": "Khám phá",
+    "myDashboard": "Trang của tôi",
+    "providerConsole": "Trang nhà cung cấp",
+    "messages": "Tin nhắn",
+    "logout": "Đăng xuất",
+    "login": "Đăng nhập",
+    "signup": "Đăng ký"
+  },
+  "home": {
+    "heroTitle": "Huấn luyện viên sức khỏe tại Việt Nam và Nigeria, chỉ một cú click.",
+    "heroSubtitle": "Huấn luyện viên cá nhân, giáo viên yoga và chuyên gia sức khỏe hiện đang rải rác ở các phòng gym và mạng xã hội. Wellness by VeloSafe tập hợp các nhà cung cấp đã xác minh, đặt lịch bằng gói tín dụng, và theo dõi tiến trình thực sự vào một nơi duy nhất.",
+    "browseProviders": "Xem nhà cung cấp",
+    "joinAsProvider": "Tham gia với vai trò nhà cung cấp",
+    "feature1Title": "Đã xác minh, không chỉ đăng tải",
+    "feature1Body": "Mỗi nhà cung cấp đều trải qua kiểm tra giấy tờ tùy thân, chứng chỉ và người tham chiếu trước khi có thể đặt lịch.",
+    "feature2Title": "Gói tín dụng, không phát sinh bất ngờ",
+    "feature2Body": "Mua tín dụng một lần, đặt buổi tập khi cần — không có đăng ký định kỳ để quên hủy.",
+    "feature3Title": "Tiến trình đã xác minh",
+    "feature3Body": "Nhà cung cấp của bạn ghi lại tiến trình thực tế, có cấu trúc sau mỗi buổi tập — không bao giờ tự báo cáo."
+  },
+  "login": {
+    "title": "Đăng nhập",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "submit": "Đăng nhập",
+    "submitting": "Đang đăng nhập…",
+    "noAccount": "Chưa có tài khoản?",
+    "signUp": "Đăng ký"
+  },
+  "register": {
+    "title": "Tạo tài khoản",
+    "subtitle": "Tham gia với vai trò khách hàng tìm huấn luyện viên, hoặc với vai trò nhà cung cấp dịch vụ sức khỏe.",
+    "roleLabel": "Tôi là…",
+    "roleClient": "Khách hàng — đang tìm nhà cung cấp",
+    "roleProvider": "Nhà cung cấp — PT / yoga / huấn luyện viên sức khỏe",
+    "name": "Họ và tên",
+    "email": "Email",
+    "password": "Mật khẩu (tối thiểu 8 ký tự)",
+    "submit": "Tạo tài khoản",
+    "submitting": "Đang tạo tài khoản…",
+    "haveAccount": "Đã có tài khoản?",
+    "login": "Đăng nhập"
+  },
+  "discover": {
+    "title": "Tìm nhà cung cấp dịch vụ sức khỏe",
+    "subtitle": "Hiện tại, sức khỏe & thể hình là lĩnh vực duy nhất được xây dựng đầy đủ — các danh mục khác ở đây chỉ là ví dụ minh họa rằng mô hình dữ liệu của nền tảng không chỉ giới hạn ở sức khỏe.",
+    "market": "Thị trường",
+    "allMarkets": "Tất cả thị trường đang hoạt động",
+    "comingSoon": "sắp ra mắt",
+    "category": "Danh mục",
+    "allCategories": "Tất cả danh mục đang hoạt động",
+    "search": "Tìm kiếm",
+    "searchPlaceholder": "ví dụ: yoga, sức mạnh, Vinyasa…",
+    "loading": "Đang tải nhà cung cấp…",
+    "empty": "Chưa có nhà cung cấp phù hợp.",
+    "verified": "Đã xác minh",
+    "notVerified": "Chưa xác minh",
+    "yrsExperience": "năm kinh nghiệm",
+    "sessionsCompleted": "buổi đã hoàn thành"
+  }
+}
