@@ -14,6 +14,7 @@ export interface ServiceCategory {
   description: string;
   requiresVerification: boolean;
   hasProgressTracking: boolean;
+  isActive?: boolean;
 }
 
 export interface Country {
@@ -55,6 +56,9 @@ export interface ProviderProfile {
   verificationTier: "NONE" | "TIER_1_BASELINE" | "TIER_2_VERIFIED" | "TIER_3_TRUSTED";
   trustScore: number;
   sessionCount: number;
+  avatarUrl?: string | null;
+  ratingAvg: number;
+  ratingCount: number;
   user: { name: string; email?: string };
   category: ServiceCategory;
   country: Country;
@@ -73,6 +77,7 @@ export interface CreditPack {
 
 export interface Booking {
   id: string;
+  providerId: string;
   status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
   scheduledAt: string;
   creditsCharged: number;
@@ -93,6 +98,25 @@ export interface ProgressLog {
   createdAt: string;
   provider?: { user: { name: string } };
   booking?: { service: Service };
+}
+
+export interface Review {
+  id: string;
+  bookingId: string;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+  client: { name: string };
+}
+
+export interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  body: string;
+  link: string | null;
+  readAt: string | null;
+  createdAt: string;
 }
 
 export interface Conversation {

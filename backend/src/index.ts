@@ -10,6 +10,10 @@ import { bookingsRouter } from "./routes/bookings.js";
 import { paymentsRouter } from "./routes/payments.js";
 import { progressRouter } from "./routes/progress.js";
 import { messagesRouter } from "./routes/messages.js";
+import { reviewsRouter } from "./routes/reviews.js";
+import { favoritesRouter } from "./routes/favorites.js";
+import { notificationsRouter } from "./routes/notifications.js";
+import { aiRouter } from "./routes/ai.js";
 
 const app = express();
 app.use(cors());
@@ -44,6 +48,10 @@ app.use("/api/bookings", bookingsRouter);
 app.use("/api/payments", paymentsRouter);
 app.use("/api/progress", progressRouter);
 app.use("/api/messages", messagesRouter);
+app.use("/api/reviews", reviewsRouter);
+app.use("/api/favorites", favoritesRouter);
+app.use("/api/notifications", notificationsRouter);
+app.use("/api/ai", aiRouter);
 
 // Centralized error handler so an unexpected throw returns JSON, not an HTML stack trace.
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

@@ -1,24 +1,82 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { api, ApiError } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
-import type { ProviderProfile, Service } from "../lib/types";
+import type { Booking, ProviderProfile, Review, Service } from "../lib/types";
+
+function initials(name: string) {
+  return name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
+}
 
 export default function ProviderProfilePage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [provider, setProvider] = useState<ProviderProfile | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewableBooking, setReviewableBooking] = useState<Booking | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [scheduledAt, setScheduledAt] = useState("");
   const [goalText, setGoalText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [booking, setBooking] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewMsg, setReviewMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    if (id) api<ProviderProfile>(`/providers/${id}`).then(setProvider);
+    if (!id) return;
+    api<ProviderProfile>(`/providers/${id}`).then(setProvider);
+    api<Review[]>(`/reviews/provider/${id}`).then(setReviews);
   }, [id]);
+
+  useEffect(() => {
+    if (!id || user?.role !== "CLIENT") return;
+    api<ProviderProfile[]>("/favorites/me").then((favs) => setIsFavorite(favs.some((f) => f.id === id))).catch(() => {});
+    Promise.all([api<Booking[]>("/bookings/me"), api<Review[]>("/reviews/me")]).then(([bookings, myReviews]) => {
+      const reviewedBookingIds = new Set(myReviews.map((r) => r.bookingId));
+      const candidate = bookings.find(
+        (b) => b.status === "COMPLETED" && b.providerId === id && !reviewedBookingIds.has(b.id)
+      );
+      setReviewableBooking(candidate ?? null);
+    }).catch(() => {});
+  }, [id, user?.role]);
+
+  async function toggleFavorite() {
+    if (!id) return;
+    try {
+      if (isFavorite) {
+        await api(`/favorites/${id}`, { method: "DELETE" });
+      } else {
+        await api(`/favorites/${id}`, { method: "POST" });
+      }
+      setIsFavorite(!isFavorite);
+    } catch {
+      /* non-critical */
+    }
+  }
+
+  async function submitReview(e: React.FormEvent) {
+    e.preventDefault();
+    if (!reviewableBooking) return;
+    setReviewMsg(null);
+    try {
+      await api("/reviews", {
+        method: "POST",
+        body: { bookingId: reviewableBooking.id, rating: reviewRating, comment: reviewComment || undefined },
+      });
+      setReviewMsg(t("discover.reviewSubmitted"));
+      setReviewableBooking(null);
+      if (id) api<Review[]>(`/reviews/provider/${id}`).then(setReviews);
+      if (id) api<ProviderProfile>(`/providers/${id}`).then(setProvider);
+    } catch (err) {
+      setReviewMsg(err instanceof ApiError ? err.message : "Could not submit review");
+    }
+  }
 
   async function bookSession(e: React.FormEvent) {
     e.preventDefault();
@@ -56,10 +114,22 @@ export default function ProviderProfilePage() {
     <div className="container">
       <div className="two-col">
         <div>
-          <h1 className="page-title">{provider.user.name}</h1>
-          <p className="page-subtitle">{provider.headline} · {provider.city}</p>
+          <div style={{ display: "flex", gap: "1rem", alignItems: "flex-start", marginBottom: "0.5rem" }}>
+            <div className="avatar-disc" style={{ width: 56, height: 56, fontSize: "1.1rem" }} aria-hidden="true">
+              {provider.avatarUrl ? <img src={provider.avatarUrl} alt="" /> : initials(provider.user.name)}
+            </div>
+            <div style={{ flex: 1 }}>
+              <h1 className="page-title" style={{ marginBottom: "0.15rem" }}>{provider.user.name}</h1>
+              <p className="page-subtitle" style={{ marginBottom: "0.4rem" }}>{provider.headline} · {provider.city}</p>
+            </div>
+            {user?.role === "CLIENT" && (
+              <button type="button" className="btn btn-ghost" onClick={toggleFavorite}>
+                {isFavorite ? `♥ ${t("discover.removeFavorite")}` : `♡ ${t("discover.addFavorite")}`}
+              </button>
+            )}
+          </div>
 
-          <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem" }}>
+          <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem", flexWrap: "wrap", alignItems: "center" }}>
             <span className="badge badge-category">{provider.category.name}</span>
             <span className="badge badge-category">{provider.country.name}</span>
             {provider.verificationTier !== "NONE" ? (
@@ -67,7 +137,12 @@ export default function ProviderProfilePage() {
             ) : (
               <span className="badge badge-unverified">Not yet verified</span>
             )}
-            <span className="trust-score">★ {provider.trustScore.toFixed(1)} · {provider.sessionCount} sessions</span>
+            {provider.ratingCount > 0 ? (
+              <span className="trust-score">★ {provider.ratingAvg.toFixed(1)} ({provider.ratingCount})</span>
+            ) : (
+              <span className="muted">{t("discover.noReviewsYet")}</span>
+            )}
+            <span className="muted">{provider.sessionCount} sessions</span>
           </div>
 
           <div className="card section">
@@ -98,6 +173,43 @@ export default function ProviderProfilePage() {
               ))}
               {provider.services.length === 0 && <p className="empty-state">No services listed yet.</p>}
             </div>
+          </div>
+
+          <div className="section">
+            <h2>{t("discover.reviews")} ({reviews.length})</h2>
+            <div className="card">
+              {reviews.length === 0 && <p className="empty-state">{t("discover.noReviewsYet")}</p>}
+              {reviews.map((r) => (
+                <div key={r.id} className="booking-row">
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <strong>{r.client.name}</strong>
+                    <span className="trust-score">{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</span>
+                  </div>
+                  {r.comment && <p className="muted" style={{ margin: "0.3rem 0 0" }}>{r.comment}</p>}
+                  <div className="muted" style={{ fontSize: "0.76rem" }}>{new Date(r.createdAt).toLocaleDateString()}</div>
+                </div>
+              ))}
+            </div>
+
+            {reviewableBooking && (
+              <form className="form card" style={{ marginTop: "0.75rem" }} onSubmit={submitReview}>
+                <strong>{t("discover.writeReview")}</strong>
+                {reviewMsg && <div className="success-banner">{reviewMsg}</div>}
+                <div>
+                  <label>{t("discover.yourRating")}</label>
+                  <select value={reviewRating} onChange={(e) => setReviewRating(Number(e.target.value))}>
+                    {[5, 4, 3, 2, 1].map((n) => (
+                      <option key={n} value={n}>{"★".repeat(n)}{"☆".repeat(5 - n)}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label>{t("discover.yourComment")}</label>
+                  <textarea rows={2} value={reviewComment} onChange={(e) => setReviewComment(e.target.value)} />
+                </div>
+                <button className="btn btn-primary" type="submit">{t("discover.submitReview")}</button>
+              </form>
+            )}
           </div>
         </div>
 

@@ -1,37 +1,50 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { api } from "../lib/api";
+import { api, ApiError } from "../lib/api";
+import { useAuth } from "../context/AuthContext";
 import type { Country, ProviderProfile, ServiceCategory } from "../lib/types";
-
-// The 5 real wellness categories, each with its own photo — plus Wellness Shop, which
-// isn't a bookable ServiceCategory (it's a product marketplace, not a session you book),
-// so it's a fixed tile here that routes to /shop instead of filtering providers.
-const CATEGORY_TILES: Array<{ slug: string; fallbackName: string; photo: string; isShop?: boolean }> = [
-  { slug: "pt", fallbackName: "Personal Training", photo: "/categories/pt.jpg" },
-  { slug: "yoga-mindfulness", fallbackName: "Yoga & Mindfulness", photo: "/categories/yoga-mindfulness.jpg" },
-  { slug: "wellness-coaching", fallbackName: "Wellness Coaching", photo: "/categories/wellness-coaching.jpg" },
-  { slug: "fitness-classes", fallbackName: "Fitness Classes", photo: "/categories/fitness-classes.jpg" },
-  { slug: "digital-programmes", fallbackName: "Digital Programmes", photo: "/categories/digital-programmes.jpg" },
-  { slug: "shop", fallbackName: "Wellness Shop", photo: "/categories/wellness-shop.jpg", isShop: true },
-];
+import { CATEGORY_TILES } from "../lib/categoryTiles";
+import ProviderCard from "../components/ProviderCard";
 
 export default function DiscoverPage() {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
   const [providers, setProviders] = useState<ProviderProfile[]>([]);
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
   const [countries, setCountries] = useState<Country[]>([]);
   const [upcomingCountries, setUpcomingCountries] = useState<Country[]>([]);
-  const [categorySlug, setCategorySlug] = useState("");
+  const [categorySlug, setCategorySlug] = useState(searchParams.get("category") ?? "");
   const [countrySlug, setCountrySlug] = useState("");
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(searchParams.get("q") ?? "");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     api<ServiceCategory[]>("/categories").then(setCategories).catch(() => {});
     api<Country[]>("/countries").then(setCountries).catch(() => {});
     api<Country[]>("/countries/upcoming").then(setUpcomingCountries).catch(() => {});
-  }, []);
+    if (user?.role === "CLIENT") {
+      api<ProviderProfile[]>("/favorites/me").then((favs) => setFavoriteIds(new Set(favs.map((f) => f.id)))).catch(() => {});
+    }
+  }, [user?.role]);
+
+  async function toggleFavorite(providerId: string) {
+    const isFav = favoriteIds.has(providerId);
+    try {
+      if (isFav) {
+        await api(`/favorites/${providerId}`, { method: "DELETE" });
+        setFavoriteIds((prev) => { const next = new Set(prev); next.delete(providerId); return next; });
+      } else {
+        await api(`/favorites/${providerId}`, { method: "POST" });
+        setFavoriteIds((prev) => new Set(prev).add(providerId));
+      }
+    } catch (err) {
+      // non-critical UI affordance — swallow network errors rather than interrupting browsing
+      if (!(err instanceof ApiError)) throw err;
+    }
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -110,26 +123,12 @@ export default function DiscoverPage() {
 
       <div className="grid grid-cards" style={{ marginTop: "1.5rem" }}>
         {providers.map((p) => (
-          <Link key={p.id} to={`/providers/${p.id}`} className="card provider-card">
-            <div className="top-row">
-              <div>
-                <strong>{p.user.name}</strong>
-                <div className="muted">{p.headline}</div>
-              </div>
-              <span className="trust-score">★ {p.trustScore.toFixed(1)}</span>
-            </div>
-            <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
-              <span className="badge badge-category">{p.category.name}</span>
-              <span className="badge badge-category">{p.country?.name}</span>
-              {p.verificationTier !== "NONE" ? (
-                <span className="badge badge-verified">✓ {t("discover.verified")} ({p.verificationTier.replace("TIER_", "T").replace("_", " ")})</span>
-              ) : (
-                <span className="badge badge-unverified">{t("discover.notVerified")}</span>
-              )}
-            </div>
-            <p className="muted" style={{ margin: 0 }}>{p.bio.slice(0, 120)}{p.bio.length > 120 ? "…" : ""}</p>
-            <div className="muted">{p.yearsExperience} {t("discover.yrsExperience")} · {p.sessionCount} {t("discover.sessionsCompleted")} · {p.city}</div>
-          </Link>
+          <ProviderCard
+            key={p.id}
+            provider={p}
+            isFavorite={favoriteIds.has(p.id)}
+            onToggleFavorite={user?.role === "CLIENT" ? toggleFavorite : undefined}
+          />
         ))}
       </div>
     </div>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { api, ApiError } from "../lib/api";
-import type { Booking, Country, CreditPack, ProgressLog } from "../lib/types";
+import type { Booking, Country, CreditPack, ProgressLog, ProviderProfile } from "../lib/types";
+import ProviderCard from "../components/ProviderCard";
+import MyWellnessPanel from "../components/MyWellnessPanel";
 
 function formatMoney(amount: number, currency: string) {
   try {
@@ -17,8 +19,13 @@ export default function ClientDashboardPage() {
   const [packs, setPacks] = useState<CreditPack[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [progress, setProgress] = useState<ProgressLog[]>([]);
+  const [favorites, setFavorites] = useState<ProviderProfile[]>([]);
   const [purchasing, setPurchasing] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+
+  function loadFavorites() {
+    api<ProviderProfile[]>("/favorites/me").then(setFavorites).catch(() => {});
+  }
 
   useEffect(() => {
     api<Country[]>("/countries").then((cs) => {
@@ -27,7 +34,19 @@ export default function ClientDashboardPage() {
     });
     api<Booking[]>("/bookings/me").then(setBookings);
     api<ProgressLog[]>("/progress/me").then(setProgress);
+    loadFavorites();
   }, []);
+
+  async function toggleFavorite(providerId: string) {
+    const isFav = favorites.some((f) => f.id === providerId);
+    try {
+      if (isFav) await api(`/favorites/${providerId}`, { method: "DELETE" });
+      else await api(`/favorites/${providerId}`, { method: "POST" });
+      loadFavorites();
+    } catch {
+      /* non-critical */
+    }
+  }
 
   async function refreshMarketData() {
     const [b, p] = await Promise.all([
@@ -93,8 +112,10 @@ export default function ClientDashboardPage() {
             </div>
           </div>
 
+          <MyWellnessPanel bookings={bookings} progress={progress} />
+
           <div className="section">
-            <h2>Your progress (provider-verified, not self-reported)</h2>
+            <h2>Your progress log (provider-verified, not self-reported)</h2>
             <div className="card">
               {progress.length === 0 && <p className="empty-state">No progress logs yet. Your provider adds one after each completed session.</p>}
               {progress.map((p) => (
@@ -111,6 +132,18 @@ export default function ClientDashboardPage() {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="section">
+            <h2>Favourite professionals</h2>
+            {favorites.length === 0 && <p className="empty-state">No favourites yet — tap the heart on a provider card in Discover to save them here.</p>}
+            {favorites.length > 0 && (
+              <div className="grid grid-cards">
+                {favorites.map((p) => (
+                  <ProviderCard key={p.id} provider={p} isFavorite onToggleFavorite={toggleFavorite} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

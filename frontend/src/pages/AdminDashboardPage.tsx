@@ -23,6 +23,17 @@ function draftFrom(p: ProviderProfile): Draft {
   };
 }
 
+interface StatsOverview {
+  totalClients: number;
+  totalProviders: number;
+  totalBookings: number;
+  completedBookings: number;
+  pendingVerifications: number;
+  verifiedProviders: number;
+  activeCategories: number;
+  activeCountries: number;
+}
+
 export default function AdminDashboardPage() {
   const [providers, setProviders] = useState<ProviderProfile[]>([]);
   const [drafts, setDrafts] = useState<Record<string, Draft>>({});
@@ -30,9 +41,11 @@ export default function AdminDashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [stats, setStats] = useState<StatsOverview | null>(null);
 
   useEffect(() => {
     load();
+    api<StatsOverview>("/providers/stats/overview").then(setStats).catch(() => {});
   }, []);
 
   function load() {
@@ -113,6 +126,22 @@ export default function AdminDashboardPage() {
 
       {error && <div className="error-banner section">{error}</div>}
       {notice && <div className="success-banner section">{notice}</div>}
+
+      {stats && (
+        <div className="section">
+          <h2>Marketplace overview</h2>
+          <div className="stat-tile-row">
+            <div className="stat-tile"><strong>{stats.totalClients}</strong><span>Clients</span></div>
+            <div className="stat-tile"><strong>{stats.totalProviders}</strong><span>Providers</span></div>
+            <div className="stat-tile"><strong>{stats.verifiedProviders}</strong><span>Verified providers</span></div>
+            <div className="stat-tile"><strong>{stats.totalBookings}</strong><span>Total bookings</span></div>
+            <div className="stat-tile"><strong>{stats.completedBookings}</strong><span>Completed sessions</span></div>
+            <div className="stat-tile"><strong>{stats.activeCategories}</strong><span>Active categories</span></div>
+            <div className="stat-tile"><strong>{stats.activeCountries}</strong><span>Active markets</span></div>
+          </div>
+        </div>
+      )}
+
       {loading && <p className="muted">Loading providers…</p>}
 
       {!loading && (

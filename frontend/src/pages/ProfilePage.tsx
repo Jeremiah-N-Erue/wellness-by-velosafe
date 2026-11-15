@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { api, ApiError } from "../lib/api";
-import type { Country, CreditPack, ProgressLog } from "../lib/types";
+import type { Booking, Country, CreditPack, ProgressLog, ProviderProfile } from "../lib/types";
+import MyWellnessPanel from "../components/MyWellnessPanel";
+import ProviderCard from "../components/ProviderCard";
 
 function formatMoney(amount: number, currency: string) {
   try {
@@ -20,8 +22,14 @@ export default function ProfilePage() {
   const [balance, setBalance] = useState<{ balance: number; currency: string } | null>(null);
   const [packs, setPacks] = useState<CreditPack[]>([]);
   const [progress, setProgress] = useState<ProgressLog[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [favorites, setFavorites] = useState<ProviderProfile[]>([]);
   const [purchasing, setPurchasing] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+
+  function loadFavorites() {
+    api<ProviderProfile[]>("/favorites/me").then(setFavorites).catch(() => {});
+  }
 
   useEffect(() => {
     api<Country[]>("/countries").then((cs) => {
@@ -29,7 +37,20 @@ export default function ProfilePage() {
       if (cs.length && !cs.some((c) => c.slug === countrySlug)) setCountrySlug(cs[0].slug);
     });
     api<ProgressLog[]>("/progress/me").then(setProgress);
+    api<Booking[]>("/bookings/me").then(setBookings);
+    loadFavorites();
   }, []);
+
+  async function toggleFavorite(providerId: string) {
+    const isFav = favorites.some((f) => f.id === providerId);
+    try {
+      if (isFav) await api(`/favorites/${providerId}`, { method: "DELETE" });
+      else await api(`/favorites/${providerId}`, { method: "POST" });
+      loadFavorites();
+    } catch {
+      /* non-critical */
+    }
+  }
 
   async function refreshMarketData() {
     const [b, p] = await Promise.all([
@@ -94,6 +115,20 @@ export default function ProfilePage() {
             </div>
           ))}
         </div>
+      </div>
+
+      <MyWellnessPanel bookings={bookings} progress={progress} />
+
+      <div className="section">
+        <h2>Favourite professionals</h2>
+        {favorites.length === 0 && <p className="empty-state">No favourites yet — tap the heart on a provider card in Explore to save them here.</p>}
+        {favorites.length > 0 && (
+          <div className="grid grid-cards">
+            {favorites.map((p) => (
+              <ProviderCard key={p.id} provider={p} isFavorite onToggleFavorite={toggleFavorite} />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="section">

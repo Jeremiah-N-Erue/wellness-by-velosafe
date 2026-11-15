@@ -2,6 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.js";
 import { requireAuth, requireRole, type AuthedRequest } from "../middleware/auth.js";
+import { createNotification } from "./notifications.js";
 
 export const bookingsRouter = Router();
 
@@ -77,6 +78,25 @@ bookingsRouter.post("/", requireAuth, requireRole("CLIENT"), async (req: AuthedR
       });
     }
 
+    const providerUser = await prisma.providerProfile.findUnique({ where: { id: service.providerId } });
+    const client = await prisma.user.findUnique({ where: { id: req.user!.id }, select: { name: true } });
+    if (providerUser) {
+      await createNotification(
+        providerUser.userId,
+        "BOOKING_CONFIRMED",
+        "New booking",
+        `${client?.name ?? "A client"} booked ${service.title}.`,
+        "/provider"
+      );
+    }
+    await createNotification(
+      req.user!.id,
+      "BOOKING_CONFIRMED",
+      "Booking confirmed",
+      `Your session "${service.title}" is confirmed.`,
+      "/booking"
+    );
+
     res.status(201).json(booking);
   } catch (err: any) {
     if (err.message === "INSUFFICIENT_CREDITS") {
@@ -135,6 +155,14 @@ bookingsRouter.patch("/:id/cancel", requireAuth, async (req: AuthedRequest, res)
 
     return cancelled;
   });
+
+  await createNotification(
+    booking.provider.userId,
+    "BOOKING_CANCELLED",
+    "Booking cancelled",
+    "A client cancelled an upcoming session.",
+    "/provider"
+  );
 
   res.json(updated);
 });

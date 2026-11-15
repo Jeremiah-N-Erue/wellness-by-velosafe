@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "../lib/prisma.js";
 import { requireAuth, type AuthedRequest } from "../middleware/auth.js";
 import { filterContactDetails } from "../utils/contactFilter.js";
+import { createNotification } from "./notifications.js";
 
 export const messagesRouter = Router();
 
@@ -82,6 +83,8 @@ messagesRouter.post("/conversations/:id/messages", requireAuth, async (req: Auth
       wasFiltered,
     },
   });
+
+  await createNotification(recipientId, "NEW_MESSAGE", "New message", filteredBody.slice(0, 80), "/messages");
 
   res.status(201).json(message);
 });

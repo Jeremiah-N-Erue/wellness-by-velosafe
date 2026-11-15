@@ -361,6 +361,45 @@ async function main() {
     },
   });
 
+  const review = await prisma.review.create({
+    data: {
+      bookingId: pastBooking.id,
+      clientId: clientUser.id,
+      providerId: ducProfile.id,
+      rating: 5,
+      comment: "Duc is excellent — patient, clear cues, and the program is already paying off.",
+    },
+  });
+  await prisma.providerProfile.update({
+    where: { id: ducProfile.id },
+    data: { ratingAvg: review.rating, ratingCount: 1 },
+  });
+
+  await prisma.favorite.upsert({
+    where: { userId_providerId: { userId: clientUser.id, providerId: ducProfile.id } },
+    update: {},
+    create: { userId: clientUser.id, providerId: ducProfile.id },
+  });
+
+  await prisma.notification.create({
+    data: {
+      userId: clientUser.id,
+      type: "PROGRESS_LOGGED",
+      title: "Progress logged",
+      body: "Your provider logged progress for a completed session. You can now leave a review.",
+      link: "/profile",
+    },
+  });
+  await prisma.notification.create({
+    data: {
+      userId: providerUser2.id,
+      type: "BOOKING_CONFIRMED",
+      title: "New booking",
+      body: "Alex Carter booked 1:1 Strength Coaching Session.",
+      link: "/provider",
+    },
+  });
+
   const conversation = await prisma.conversation.create({
     data: { clientId: clientUser.id, providerId: ducProfile.id, stage: "POST_BOOKING" },
   });

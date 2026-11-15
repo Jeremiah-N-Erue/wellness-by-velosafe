@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { SUPPORTED_LANGUAGES } from "../i18n";
 import MobileTabBar from "./MobileTabBar";
+import NotificationBell from "./NotificationBell";
 
 export default function Layout() {
   const { user, logout } = useAuth();
@@ -35,6 +36,7 @@ export default function Layout() {
 
           {user ? (
             <>
+              <NotificationBell />
               <span className="pill">{user.name} · {user.role}</span>
               <button className="btn btn-ghost" style={{ padding: "0.35rem 0.8rem", borderColor: "rgba(255,255,255,0.3)", color: "white" }} onClick={logout}>
                 {t("nav.logout")}

@@ -6,7 +6,7 @@ export default function ProviderDashboardPage() {
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
   const [countries, setCountries] = useState<Country[]>([]);
   const [profileForm, setProfileForm] = useState({
-    categorySlug: "wellness",
+    categorySlug: "pt",
     countrySlug: "vietnam",
     city: "Ho Chi Minh City",
     headline: "",
@@ -19,11 +19,34 @@ export default function ProviderDashboardPage() {
   const [logDrafts, setLogDrafts] = useState<Record<string, { sessionNotes: string; goalProgressSummary: string; recommendedNextSessions: string; recommendationRationale: string }>>({});
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [stats, setStats] = useState<{ totalBookings: number; completedSessions: number; creditsEarned: number; completionRate: number; cancelledOrNoShow: number } | null>(null);
+  const [ratingAvg, setRatingAvg] = useState(0);
+  const [ratingCount, setRatingCount] = useState(0);
+  const [trustScore, setTrustScore] = useState(0);
 
   useEffect(() => {
     api<ServiceCategory[]>("/categories").then(setCategories).catch(() => {});
     api<Country[]>("/countries").then(setCountries).catch(() => {});
     loadBookings();
+    api<{ profile: any; stats: typeof stats }>("/providers/me")
+      .then(({ profile, stats: s }) => {
+        setProfileForm({
+          categorySlug: profile.category.slug,
+          countrySlug: profile.country.slug,
+          city: profile.city,
+          headline: profile.headline,
+          bio: profile.bio,
+          yearsExperience: profile.yearsExperience,
+        });
+        setProfileSaved(true);
+        setRatingAvg(profile.ratingAvg);
+        setRatingCount(profile.ratingCount);
+        setTrustScore(profile.trustScore);
+        setStats(s);
+      })
+      .catch(() => {
+        // No profile yet — leave the create form at its defaults.
+      });
   }, []);
 
   function loadBookings() {
@@ -89,6 +112,10 @@ export default function ProviderDashboardPage() {
       });
       setNotice("Progress logged — the client can now see it, and this booking is marked completed.");
       loadBookings();
+      api<{ profile: any; stats: typeof stats }>("/providers/me").then(({ stats: s, profile }) => {
+        setStats(s);
+        setTrustScore(profile.trustScore);
+      }).catch(() => {});
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Could not log progress");
     }
@@ -101,6 +128,26 @@ export default function ProviderDashboardPage() {
 
       {error && <div className="error-banner section">{error}</div>}
       {notice && <div className="success-banner section">{notice}</div>}
+
+      {stats && (
+        <div className="section">
+          <h2>Performance overview</h2>
+          <div className="stat-tile-row">
+            <div className="stat-tile"><strong>{stats.completedSessions}</strong><span>Completed sessions</span></div>
+            <div className="stat-tile"><strong>{stats.creditsEarned}</strong><span>Credits earned</span></div>
+            <div className="stat-tile"><strong>{stats.completionRate}%</strong><span>Completion rate</span></div>
+            <div className="stat-tile"><strong>★ {trustScore.toFixed(1)}</strong><span>Trust score</span></div>
+            <div className="stat-tile">
+              <strong>{ratingCount > 0 ? `★ ${ratingAvg.toFixed(1)}` : "—"}</strong>
+              <span>{ratingCount > 0 ? `${ratingCount} customer review${ratingCount > 1 ? "s" : ""}` : "No reviews yet"}</span>
+            </div>
+          </div>
+          <p className="muted" style={{ fontSize: "0.78rem", marginTop: "0.5rem" }}>
+            "Credits earned" is credits charged across your completed sessions — there's no real payout
+            integration yet (see docs/architecture.md on Paystack/Flutterwave as the likely next step).
+          </p>
+        </div>
+      )}
 
       <div className="two-col">
         <div>

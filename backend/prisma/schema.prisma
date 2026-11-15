@@ -80,6 +80,9 @@ model User {
   receivedMessages Message[] @relation("ReceivedMessages")
   clientConversations   Conversation[] @relation("ClientConversations")
   progressAsClient ProgressLog[] @relation("ClientProgress")
+  reviewsWritten   Review[] @relation("ClientReviews")
+  favorites        Favorite[]
+  notifications    Notification[]
 }
 
 // A service vertical. WELLNESS is the only one fully built out in this MVP;
@@ -131,6 +134,9 @@ model ProviderProfile {
   trustScore  Float    @default(0)
   sessionCount Int     @default(0)
   noShowCount  Int     @default(0)
+  avatarUrl   String?  // provider photo — set via /providers/me, no upload pipeline yet (URL only)
+  ratingAvg   Float    @default(0) // customer star rating, distinct from trustScore (platform/verification score)
+  ratingCount Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -139,6 +145,8 @@ model ProviderProfile {
   bookings           Booking[]
   progressLogs       ProgressLog[] @relation("ProviderProgress")
   conversations      Conversation[] @relation("ProviderConversations")
+  reviews            Review[]
+  favoritedBy        Favorite[]
 }
 
 model VerificationRecord {
@@ -274,4 +282,43 @@ model Message {
   filteredBody   String   // what the recipient actually sees
   wasFiltered    Boolean  @default(false)
   createdAt      DateTime @default(now())
+}
+
+// A genuine customer review, tied 1:1 to a completed booking — never a free-floating rating,
+// so it can't be left without having actually booked the provider.
+model Review {
+  id         String   @id @default(cuid())
+  bookingId  String   @unique
+  clientId   String
+  client     User     @relation("ClientReviews", fields: [clientId], references: [id])
+  providerId String
+  provider   ProviderProfile @relation(fields: [providerId], references: [id])
+  rating     Int      // 1-5
+  comment    String?
+  createdAt  DateTime @default(now())
+}
+
+// A client's saved/favourite professionals list.
+model Favorite {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  providerId String
+  provider   ProviderProfile @relation(fields: [providerId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, providerId])
+}
+
+// Lightweight in-app notification feed — booking confirmed, progress logged, new message, etc.
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // BOOKING_CONFIRMED, BOOKING_CANCELLED, PROGRESS_LOGGED, NEW_MESSAGE, VERIFICATION_UPDATED
+  title     String
+  body      String
+  link      String?  // frontend path to deep-link to, e.g. /booking
+  readAt    DateTime?
+  createdAt DateTime @default(now())
 }

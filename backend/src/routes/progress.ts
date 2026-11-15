@@ -2,6 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.js";
 import { requireAuth, requireRole, type AuthedRequest } from "../middleware/auth.js";
+import { createNotification } from "./notifications.js";
 
 export const progressRouter = Router();
 
@@ -45,6 +46,14 @@ progressRouter.post("/", requireAuth, requireRole("PROVIDER"), async (req: Authe
     where: { id: booking.providerId },
     data: { sessionCount: { increment: 1 } },
   });
+
+  await createNotification(
+    booking.clientId,
+    "PROGRESS_LOGGED",
+    "Progress logged",
+    "Your provider logged progress for a completed session. You can now leave a review.",
+    "/profile"
+  );
 
   res.status(201).json(log);
 });
