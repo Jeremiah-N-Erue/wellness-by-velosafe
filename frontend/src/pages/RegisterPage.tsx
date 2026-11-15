@@ -28,8 +28,9 @@ export default function RegisterPage() {
 
   return (
     <div className="container" style={{ maxWidth: 480 }}>
-      <h1 className="page-title">{t("register.title")}</h1>
-      <p className="page-subtitle">{t("register.subtitle")}</p>
+      <img src="/logo.png" alt="Wellness by VeloSafe" style={{ width: 56, height: 56, display: "block", margin: "0 auto 1rem" }} />
+      <h1 className="page-title" style={{ textAlign: "center" }}>{t("register.title")}</h1>
+      <p className="page-subtitle" style={{ textAlign: "center" }}>{t("register.subtitle")}</p>
       {error && <div className="error-banner" style={{ marginBottom: "1rem" }}>{error}</div>}
       <form className="form" onSubmit={onSubmit}>
         <div>

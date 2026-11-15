@@ -11,7 +11,7 @@ export default function Layout() {
     <div className="app-shell">
       <header className="navbar">
         <NavLink to="/" className="brand">
-          <span className="dot" />
+          <img src="/logo.png" alt="" className="logo-mark" />
           Wellness by VeloSafe
         </NavLink>
         <nav>

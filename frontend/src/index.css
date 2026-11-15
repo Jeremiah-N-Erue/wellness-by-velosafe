@@ -53,11 +53,11 @@ a {
   gap: 0.5rem;
 }
 
-.navbar .brand .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--gold);
+.navbar .brand .logo-mark {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .navbar nav {

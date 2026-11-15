@@ -29,7 +29,8 @@ export default function LoginPage() {
 
   return (
     <div className="container" style={{ maxWidth: 480 }}>
-      <h1 className="page-title">{t("login.title")}</h1>
+      <img src="/logo.png" alt="Wellness by VeloSafe" style={{ width: 56, height: 56, display: "block", margin: "0 auto 1rem" }} />
+      <h1 className="page-title" style={{ textAlign: "center" }}>{t("login.title")}</h1>
       <p className="page-subtitle">
         Seed accounts: <code>client@example.com</code>, <code>mai.tran@example.com</code> (VN provider),{" "}
         <code>chioma.okafor@example.com</code> (NG provider), <code>admin@wellnessbyvelosafe.app</code> — password{" "}

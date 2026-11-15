@@ -1,4 +1,5 @@
 import "dotenv/config";
+import path from "node:path";
 import express from "express";
 import cors from "cors";
 import { authRouter } from "./routes/auth.js";
@@ -14,6 +15,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Serves /logo.png and /favicon.ico (same brand mark used by the frontend) so the API
+// identifies itself visually too — e.g. to anyone opening the bare API URL in a browser.
+app.use(express.static(path.join(process.cwd(), "public")));
+
 app.get("/health", (_req, res) => res.json({ status: "ok", service: "wellness-by-velosafe-api" }));
 
 // This is an API-only service with no browsable UI of its own — the product lives at the
@@ -26,6 +31,7 @@ app.get("/", (_req, res) =>
     message: "This is the Wellness by VeloSafe API. There's no UI here — use the app instead.",
     app: "https://wellness-by-velosafe.onrender.com",
     health: "/health",
+    logo: "/logo.png",
     docs: "https://github.com/Jeremiah-N-Erue/wellness-by-velosafe",
   })
 );
