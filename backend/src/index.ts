@@ -16,6 +16,20 @@ app.use(express.json());
 
 app.get("/health", (_req, res) => res.json({ status: "ok", service: "wellness-by-velosafe-api" }));
 
+// This is an API-only service with no browsable UI of its own — the product lives at the
+// frontend origin. A visitor landing on the bare root (e.g. by typing the API URL directly)
+// should get an informative pointer, not Express's default "Cannot GET /".
+app.get("/", (_req, res) =>
+  res.json({
+    service: "wellness-by-velosafe-api",
+    status: "ok",
+    message: "This is the Wellness by VeloSafe API. There's no UI here — use the app instead.",
+    app: "https://wellness-by-velosafe.onrender.com",
+    health: "/health",
+    docs: "https://github.com/Jeremiah-N-Erue/wellness-by-velosafe",
+  })
+);
+
 app.use("/api/auth", authRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/countries", countriesRouter);

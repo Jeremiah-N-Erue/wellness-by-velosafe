@@ -9,6 +9,7 @@ import DiscoverPage from "./pages/DiscoverPage";
 import ProviderProfilePage from "./pages/ProviderProfilePage";
 import ClientDashboardPage from "./pages/ClientDashboardPage";
 import ProviderDashboardPage from "./pages/ProviderDashboardPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 import MessagesPage from "./pages/MessagesPage";
 
 export default function App() {
@@ -35,6 +36,14 @@ export default function App() {
               element={
                 <ProtectedRoute role="PROVIDER">
                   <ProviderDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute role="ADMIN">
+                  <AdminDashboardPage />
                 </ProtectedRoute>
               }
             />

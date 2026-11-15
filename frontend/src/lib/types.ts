@@ -36,7 +36,12 @@ export interface Service {
 export interface VerificationRecord {
   idDocumentVerified: boolean;
   certificationVerified: boolean;
-  referenceContactStatus: string;
+  referenceContactName: string | null;
+  referenceContactPhone: string | null;
+  referenceContactStatus: "PENDING" | "CONTACTED" | "CONFIRMED" | "FAILED";
+  codeOfConductSignedAt: string | null;
+  waiverSignedAt: string | null;
+  notes: string | null;
   tier1CompletedAt: string | null;
 }
 
