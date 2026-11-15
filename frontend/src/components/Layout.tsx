@@ -2,6 +2,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { SUPPORTED_LANGUAGES } from "../i18n";
+import MobileTabBar from "./MobileTabBar";
 
 export default function Layout() {
   const { user, logout } = useAuth();
@@ -48,6 +49,7 @@ export default function Layout() {
         </nav>
       </header>
       <Outlet />
+      {user?.role === "CLIENT" && <MobileTabBar />}
     </div>
   );
 }

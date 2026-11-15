@@ -7,7 +7,12 @@
     "messages": "消息",
     "logout": "退出登录",
     "login": "登录",
-    "signup": "注册"
+    "signup": "注册",
+    "home": "首页",
+    "explore": "探索",
+    "booking": "预约",
+    "shop": "健康商店",
+    "profile": "我的"
   },
   "home": {
     "heroTitle": "越南和尼日利亚的健康服务提供者,一键即达。",
@@ -46,7 +51,7 @@
   },
   "discover": {
     "title": "寻找健康服务者",
-    "subtitle": "目前只有健康与健身这一类别被完整搭建 —— 您在此看到的其他类别只是示例,用以证明平台的数据模型并不局限于健康领域。",
+    "subtitle": "私人训练、瑜伽与正念、健康教练这三类今天已经上线,可直接预约。团体健身课与数字课程是已开放但尚无服务者加入的类别。",
     "market": "市场",
     "allMarkets": "所有活跃市场",
     "comingSoon": "即将推出",
@@ -59,6 +64,32 @@
     "verified": "已验证",
     "notVerified": "尚未验证",
     "yrsExperience": "年经验",
-    "sessionsCompleted": "次已完成课程"
+    "sessionsCompleted": "次已完成课程",
+    "browseByCategory": "按类别浏览",
+    "noProvidersYet": "即将推出 —— 暂无服务者"
+  },
+  "shop": {
+    "title": "健康商店",
+    "subtitle": "即将推出",
+    "body": "我们正在打造一个健身与健康产品的市场 —— 来自可信卖家的营养品、器材和装备。目前,您可以在「探索」中浏览并预约真实的服务者。",
+    "cta": "前往探索"
+  },
+  "booking": {
+    "title": "您的预约",
+    "subtitle": "管理预约和课程安排。",
+    "noBookings": "暂无预约 —— 前往「探索」预约您的第一次课程。",
+    "cancel": "取消",
+    "goal": "目标"
+  },
+  "profile": {
+    "title": "我的",
+    "subtitle": "目标、付款、进度与设置。",
+    "market": "市场",
+    "creditsAvailable": "可用积分",
+    "buyCredits": "购买积分",
+    "noPacks": "该市场暂无积分套餐。",
+    "progressTitle": "您的进度(由服务者验证,非自我报告)",
+    "noProgress": "暂无进度记录。服务者会在每次完成课程后添加记录。",
+    "recommended": "建议"
   }
 }

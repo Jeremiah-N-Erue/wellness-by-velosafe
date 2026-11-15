@@ -7,7 +7,12 @@
     "messages": "Messages",
     "logout": "Se déconnecter",
     "login": "Se connecter",
-    "signup": "S'inscrire"
+    "signup": "S'inscrire",
+    "home": "Accueil",
+    "explore": "Explorer",
+    "booking": "Réservations",
+    "shop": "Boutique bien-être",
+    "profile": "Profil"
   },
   "home": {
     "heroTitle": "Des prestataires de bien-être au Vietnam et au Nigeria, en un clic.",
@@ -46,7 +51,7 @@
   },
   "discover": {
     "title": "Trouver un prestataire bien-être",
-    "subtitle": "Le bien-être est aujourd'hui le seul secteur entièrement développé — les autres catégories visibles ici ne sont que des exemples prouvant que le modèle de données de la plateforme ne se limite pas au bien-être.",
+    "subtitle": "Coaching personnel, Yoga & pleine conscience, et Coaching bien-être sont actifs et réservables dès aujourd'hui. Cours collectifs et Programmes numériques sont des catégories ouvertes, en attente de leurs premiers prestataires.",
     "market": "Marché",
     "allMarkets": "Tous les marchés actifs",
     "comingSoon": "bientôt disponible",
@@ -59,6 +64,32 @@
     "verified": "Vérifié",
     "notVerified": "Pas encore vérifié",
     "yrsExperience": "ans d'expérience",
-    "sessionsCompleted": "séances terminées"
+    "sessionsCompleted": "séances terminées",
+    "browseByCategory": "Parcourir par catégorie",
+    "noProvidersYet": "bientôt disponible — pas encore de prestataire"
+  },
+  "shop": {
+    "title": "Boutique bien-être",
+    "subtitle": "Bientôt disponible",
+    "body": "Nous construisons une place de marché pour les produits fitness et bien-être — compléments, équipements et accessoires de vendeurs de confiance. Pour l'instant, parcourez et réservez de vrais prestataires dans Explorer.",
+    "cta": "Aller à Explorer"
+  },
+  "booking": {
+    "title": "Vos réservations",
+    "subtitle": "Gérez vos rendez-vous et séances.",
+    "noBookings": "Aucune réservation pour le moment — allez dans Explorer pour réserver votre première séance.",
+    "cancel": "Annuler",
+    "goal": "Objectif"
+  },
+  "profile": {
+    "title": "Profil",
+    "subtitle": "Objectifs, paiement, progression et paramètres.",
+    "market": "Marché",
+    "creditsAvailable": "crédits disponibles",
+    "buyCredits": "Acheter des crédits",
+    "noPacks": "Aucun pack de crédits sur ce marché pour le moment.",
+    "progressTitle": "Votre progression (vérifiée par le prestataire, non auto-déclarée)",
+    "noProgress": "Aucun suivi de progression encore. Votre prestataire en ajoute un après chaque séance terminée.",
+    "recommended": "Recommandé"
   }
 }

@@ -7,7 +7,12 @@
     "messages": "Tin nhắn",
     "logout": "Đăng xuất",
     "login": "Đăng nhập",
-    "signup": "Đăng ký"
+    "signup": "Đăng ký",
+    "home": "Trang chủ",
+    "explore": "Khám phá",
+    "booking": "Lịch đặt",
+    "shop": "Cửa hàng sức khỏe",
+    "profile": "Hồ sơ"
   },
   "home": {
     "heroTitle": "Huấn luyện viên sức khỏe tại Việt Nam và Nigeria, chỉ một cú click.",
@@ -46,7 +51,7 @@
   },
   "discover": {
     "title": "Tìm nhà cung cấp dịch vụ sức khỏe",
-    "subtitle": "Hiện tại, sức khỏe & thể hình là lĩnh vực duy nhất được xây dựng đầy đủ — các danh mục khác ở đây chỉ là ví dụ minh họa rằng mô hình dữ liệu của nền tảng không chỉ giới hạn ở sức khỏe.",
+    "subtitle": "Huấn luyện cá nhân, Yoga & Thiền, và Tư vấn sức khỏe đã hoạt động và có thể đặt lịch ngay hôm nay. Lớp thể hình nhóm và Chương trình số là các danh mục đang mở, chờ nhà cung cấp đầu tiên.",
     "market": "Thị trường",
     "allMarkets": "Tất cả thị trường đang hoạt động",
     "comingSoon": "sắp ra mắt",
@@ -59,6 +64,32 @@
     "verified": "Đã xác minh",
     "notVerified": "Chưa xác minh",
     "yrsExperience": "năm kinh nghiệm",
-    "sessionsCompleted": "buổi đã hoàn thành"
+    "sessionsCompleted": "buổi đã hoàn thành",
+    "browseByCategory": "Xem theo danh mục",
+    "noProvidersYet": "sắp ra mắt — chưa có nhà cung cấp"
+  },
+  "shop": {
+    "title": "Cửa hàng sức khỏe",
+    "subtitle": "Sắp ra mắt",
+    "body": "Chúng tôi đang xây dựng một chợ trực tuyến cho các sản phẩm thể hình và sức khỏe — thực phẩm bổ sung, thiết bị và dụng cụ từ người bán uy tín. Hiện tại, hãy khám phá và đặt lịch với các nhà cung cấp thực tế ở phần Khám phá.",
+    "cta": "Đến phần Khám phá"
+  },
+  "booking": {
+    "title": "Lịch đặt của bạn",
+    "subtitle": "Quản lý các buổi hẹn và lịch tập.",
+    "noBookings": "Chưa có lịch đặt — hãy vào Khám phá để đặt buổi đầu tiên.",
+    "cancel": "Hủy",
+    "goal": "Mục tiêu"
+  },
+  "profile": {
+    "title": "Hồ sơ",
+    "subtitle": "Mục tiêu, thanh toán, tiến trình và cài đặt.",
+    "market": "Thị trường",
+    "creditsAvailable": "tín dụng khả dụng",
+    "buyCredits": "Mua tín dụng",
+    "noPacks": "Chưa có gói tín dụng ở thị trường này.",
+    "progressTitle": "Tiến trình của bạn (do nhà cung cấp xác minh, không tự báo cáo)",
+    "noProgress": "Chưa có ghi nhận tiến trình. Nhà cung cấp sẽ thêm sau mỗi buổi hoàn thành.",
+    "recommended": "Khuyến nghị"
   }
 }

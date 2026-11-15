@@ -7,7 +7,12 @@
     "messages": "Messages",
     "logout": "Log out",
     "login": "Log in",
-    "signup": "Sign up"
+    "signup": "Sign up",
+    "home": "Home",
+    "explore": "Explore",
+    "booking": "Booking",
+    "shop": "Wellness Shop",
+    "profile": "Profile"
   },
   "home": {
     "heroTitle": "Wellness providers in Vietnam and Nigeria, one click away.",
@@ -46,7 +51,7 @@
   },
   "discover": {
     "title": "Find a wellness provider",
-    "subtitle": "Wellness is the only fully-built vertical today — other categories you see here are placeholders proving the platform's data model isn't locked to wellness alone.",
+    "subtitle": "Personal Training, Yoga & Mindfulness, and Wellness Coaching are live and bookable today. Fitness Classes and Digital Programmes are open categories waiting on their first providers.",
     "market": "Market",
     "allMarkets": "All active markets",
     "comingSoon": "coming soon",
@@ -59,6 +64,32 @@
     "verified": "Verified",
     "notVerified": "Not yet verified",
     "yrsExperience": "yrs experience",
-    "sessionsCompleted": "sessions completed"
+    "sessionsCompleted": "sessions completed",
+    "browseByCategory": "Browse by category",
+    "noProvidersYet": "coming soon — no providers yet"
+  },
+  "shop": {
+    "title": "Wellness Shop",
+    "subtitle": "Coming soon",
+    "body": "We're building a marketplace for fitness and wellness products — supplements, equipment, and gear from trusted sellers. For now, browse and book real providers in Explore.",
+    "cta": "Go to Explore"
+  },
+  "booking": {
+    "title": "Your bookings",
+    "subtitle": "Manage appointments and sessions.",
+    "noBookings": "No bookings yet — head to Explore to book your first session.",
+    "cancel": "Cancel",
+    "goal": "Goal"
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Goals, payment, progress, and settings.",
+    "market": "Market",
+    "creditsAvailable": "credits available",
+    "buyCredits": "Buy credits",
+    "noPacks": "No credit packs in this market yet.",
+    "progressTitle": "Your progress (provider-verified, not self-reported)",
+    "noProgress": "No progress logs yet. Your provider adds one after each completed session.",
+    "recommended": "Recommended"
   }
 }

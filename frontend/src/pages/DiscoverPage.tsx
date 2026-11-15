@@ -4,6 +4,18 @@ import { useTranslation } from "react-i18next";
 import { api } from "../lib/api";
 import type { Country, ProviderProfile, ServiceCategory } from "../lib/types";
 
+// The 5 real wellness categories, each with its own photo — plus Wellness Shop, which
+// isn't a bookable ServiceCategory (it's a product marketplace, not a session you book),
+// so it's a fixed tile here that routes to /shop instead of filtering providers.
+const CATEGORY_TILES: Array<{ slug: string; fallbackName: string; photo: string; isShop?: boolean }> = [
+  { slug: "pt", fallbackName: "Personal Training", photo: "/categories/pt.jpg" },
+  { slug: "yoga-mindfulness", fallbackName: "Yoga & Mindfulness", photo: "/categories/yoga-mindfulness.jpg" },
+  { slug: "wellness-coaching", fallbackName: "Wellness Coaching", photo: "/categories/wellness-coaching.jpg" },
+  { slug: "fitness-classes", fallbackName: "Fitness Classes", photo: "/categories/fitness-classes.jpg" },
+  { slug: "digital-programmes", fallbackName: "Digital Programmes", photo: "/categories/digital-programmes.jpg" },
+  { slug: "shop", fallbackName: "Wellness Shop", photo: "/categories/wellness-shop.jpg", isShop: true },
+];
+
 export default function DiscoverPage() {
   const { t } = useTranslation();
   const [providers, setProviders] = useState<ProviderProfile[]>([]);
@@ -32,10 +44,38 @@ export default function DiscoverPage() {
       .finally(() => setLoading(false));
   }, [categorySlug, countrySlug, q]);
 
+  function categoryName(slug: string, fallback: string) {
+    return categories.find((c) => c.slug === slug)?.name ?? fallback;
+  }
+
   return (
     <div className="container">
       <h1 className="page-title">{t("discover.title")}</h1>
       <p className="page-subtitle">{t("discover.subtitle")}</p>
+
+      <div className="section">
+        <h2 style={{ fontSize: "1.1rem", color: "var(--navy-dark)", marginBottom: "0.75rem" }}>{t("discover.browseByCategory")}</h2>
+        <div className="category-grid">
+          {CATEGORY_TILES.map((tile) =>
+            tile.isShop ? (
+              <Link key={tile.slug} to="/shop" className="category-tile">
+                <img src={tile.photo} alt="" />
+                <span className="category-tile-label">{t("nav.shop")}</span>
+              </Link>
+            ) : (
+              <button
+                key={tile.slug}
+                type="button"
+                className={`category-tile ${categorySlug === tile.slug ? "is-active" : ""}`}
+                onClick={() => setCategorySlug(categorySlug === tile.slug ? "" : tile.slug)}
+              >
+                <img src={tile.photo} alt="" />
+                <span className="category-tile-label">{categoryName(tile.slug, tile.fallbackName)}</span>
+              </button>
+            )
+          )}
+        </div>
+      </div>
 
       <div className="card section" style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "flex-end" }}>
         <div style={{ flex: 1, minWidth: 180 }}>

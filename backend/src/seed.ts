@@ -33,16 +33,83 @@ async function main() {
   });
 
   // --- Categories -------------------------------------------------------------
-  // WELLNESS is the only category with its full operating model wired up.
-  const wellness = await prisma.serviceCategory.upsert({
-    where: { slug: "wellness" },
+  // The wellness vertical ships as 5 specific categories (not one umbrella "Wellness &
+  // Fitness" bucket) so Explore can show a real photo + specialty per category. All 5
+  // share the same operating model: 3-tier verification + progress tracking.
+  const pt = await prisma.serviceCategory.upsert({
+    where: { slug: "pt" },
     update: {},
+    create: {
+      slug: "pt",
+      name: "Personal Training",
+      description: "Certified personal trainers for one-on-one strength, conditioning, and movement coaching.",
+      requiresVerification: true,
+      hasProgressTracking: true,
+    },
+  });
+
+  const yogaMindfulness = await prisma.serviceCategory.upsert({
+    where: { slug: "yoga-mindfulness" },
+    update: {},
+    create: {
+      slug: "yoga-mindfulness",
+      name: "Yoga & Mindfulness",
+      description: "Yoga instructors and mindfulness guides for flexibility, breathwork, and stress recovery.",
+      requiresVerification: true,
+      hasProgressTracking: true,
+    },
+  });
+
+  const wellnessCoaching = await prisma.serviceCategory.upsert({
+    where: { slug: "wellness-coaching" },
+    update: {},
+    create: {
+      slug: "wellness-coaching",
+      name: "Wellness Coaching",
+      description: "Holistic wellness coaches blending fitness, nutrition, and sustainable habit-building.",
+      requiresVerification: true,
+      hasProgressTracking: true,
+    },
+  });
+
+  await prisma.serviceCategory.upsert({
+    where: { slug: "fitness-classes" },
+    update: {},
+    create: {
+      slug: "fitness-classes",
+      name: "Fitness Classes",
+      description: "Group fitness classes — HIIT, dance, bootcamp, and more. No providers have joined this category yet.",
+      requiresVerification: true,
+      hasProgressTracking: true,
+    },
+  });
+
+  await prisma.serviceCategory.upsert({
+    where: { slug: "digital-programmes" },
+    update: {},
+    create: {
+      slug: "digital-programmes",
+      name: "Digital Programmes",
+      description:
+        "Self-paced digital training and nutrition programmes you follow on your own schedule. No providers have joined this category yet.",
+      requiresVerification: true,
+      hasProgressTracking: true,
+    },
+  });
+
+  // Retired — superseded by the 5 categories above. Kept (isActive: false) rather than
+  // deleted so any historical FK reference stays valid.
+  await prisma.serviceCategory.upsert({
+    where: { slug: "wellness" },
+    update: { isActive: false },
     create: {
       slug: "wellness",
       name: "Wellness & Fitness",
-      description: "Personal trainers, yoga instructors, and wellness coaches.",
+      description:
+        "Retired — split into Personal Training, Yoga & Mindfulness, Wellness Coaching, Fitness Classes, and Digital Programmes.",
       requiresVerification: true,
       hasProgressTracking: true,
+      isActive: false,
     },
   });
 
@@ -144,7 +211,7 @@ async function main() {
     update: {},
     create: {
       userId: providerUser1.id,
-      categoryId: wellness.id,
+      categoryId: yogaMindfulness.id,
       countryId: vietnam.id,
       city: "Ho Chi Minh City",
       headline: "Certified Yoga Instructor — Vinyasa & Restorative",
@@ -172,7 +239,7 @@ async function main() {
     update: {},
     create: {
       userId: providerUser2.id,
-      categoryId: wellness.id,
+      categoryId: pt.id,
       countryId: vietnam.id,
       city: "Ho Chi Minh City",
       headline: "Personal Trainer — Strength & Conditioning",
@@ -200,7 +267,7 @@ async function main() {
     update: {},
     create: {
       userId: providerUser3.id,
-      categoryId: wellness.id,
+      categoryId: wellnessCoaching.id,
       countryId: nigeria.id,
       city: "Lagos",
       headline: "Wellness Coach — HIIT & Nutrition Guidance",

@@ -11,6 +11,9 @@ import ClientDashboardPage from "./pages/ClientDashboardPage";
 import ProviderDashboardPage from "./pages/ProviderDashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import MessagesPage from "./pages/MessagesPage";
+import ShopPage from "./pages/ShopPage";
+import BookingPage from "./pages/BookingPage";
+import ProfilePage from "./pages/ProfilePage";
 
 export default function App() {
   return (
@@ -22,7 +25,24 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/discover" element={<DiscoverPage />} />
+            <Route path="/shop" element={<ShopPage />} />
             <Route path="/providers/:id" element={<ProviderProfilePage />} />
+            <Route
+              path="/booking"
+              element={
+                <ProtectedRoute role="CLIENT">
+                  <BookingPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute role="CLIENT">
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/dashboard"
               element={
