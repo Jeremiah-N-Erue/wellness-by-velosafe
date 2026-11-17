@@ -5,7 +5,29 @@ connecting personal trainers, yoga instructors, and wellness coaches (currently 
 across gyms and social media) with clients, through verified profiles, prepaid credit-pack
 bookings, and provider-logged progress tracking.
 
-Built by [Velosafe Technologies Ltd](https://github.com/).
+Built by **Jeremiah Ndidi Erue**, founder of Velosafe Technologies Ltd —
+[LinkedIn](https://www.linkedin.com/in/jeremiah-ndidi-erue).
+
+[![Live Demo](https://img.shields.io/badge/demo-live-2e7d4f?style=flat-square)](https://wellness-by-velosafe.onrender.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](#tech-stack)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white)](#tech-stack)
+[![Express](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white)](#tech-stack)
+[![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=20232A)](#tech-stack)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)](#tech-stack)
+[![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white)](#tech-stack)
+
+## Why this exists
+
+In Ho Chi Minh City and Lagos, independent personal trainers, yoga instructors, and
+wellness coaches are easy to find and hard to trust: a few work out of gyms, but most
+market themselves through scattered Instagram and Facebook posts, with no consistent way
+for a prospective client to verify credentials, see a real track record, or pay for a
+session without handing over a phone number first. Wellness by VeloSafe is the trust layer
+this space is missing — verified provider profiles, prepaid credit-pack bookings instead of
+risky one-off cash transactions, and session-by-session progress tracking that the
+**provider** logs, never self-reported by the client. It launches wellness-first in two
+markets, built on a category- and country-agnostic data model so expanding into a new
+vertical or a new market is a data change, not a rewrite — see `docs/architecture.md`.
 
 ## 🔗 Live demo
 
@@ -17,10 +39,22 @@ Try it with a seeded account — see [Seeded accounts](#seeded-accounts-password
 that sleeps after ~15 minutes of inactivity, so the first request after a quiet period can
 take up to a minute to wake up — that's expected, not a bug.
 
-<p>
-  <img src="docs/screenshots/homepage.jpg" alt="Wellness by VeloSafe landing page" width="420" />
-  <img src="docs/screenshots/discover.jpg" alt="Provider discovery page with verified providers in Vietnam and Nigeria" width="420" />
-</p>
+<table>
+  <tr>
+    <td width="33%" align="center">
+      <img src="docs/screenshots/homepage.jpg" alt="Wellness by VeloSafe homepage" width="260"/><br/>
+      <sub><b>Homepage</b><br/>Live stats, category tiles, Wellness AI</sub>
+    </td>
+    <td width="33%" align="center">
+      <img src="docs/screenshots/discover.jpg" alt="Provider discovery page" width="260"/><br/>
+      <sub><b>Discover</b><br/>Category browsing, verified providers</sub>
+    </td>
+    <td width="33%" align="center">
+      <img src="docs/screenshots/system-health.jpg" alt="Admin System Health dashboard" width="260"/><br/>
+      <sub><b>System Health</b><br/>Live backend operations dashboard</sub>
+    </td>
+  </tr>
+</table>
 
 ## What's real in this MVP
 
@@ -62,11 +96,12 @@ verification workflows, and a hosted chat SDK migration are all specified in the
 strategy docs but deliberately staged for after the wellness core proves itself. This is
 sequencing discipline, not an oversight — see `docs/architecture.md`.
 
-## Stack
+## Tech stack
 
 - **Backend:** Node.js + TypeScript, Express, Prisma ORM, PostgreSQL.
 - **Frontend:** React + Vite + TypeScript.
-- **Infra:** docker-compose for Postgres (+ optionally the backend itself).
+- **Infra:** docker-compose for Postgres (+ optionally the backend itself); deployed on
+  Render (web services) and Supabase (managed Postgres).
 
 ## Running it locally
 
@@ -103,7 +138,7 @@ above.
 | `mai.tran@example.com` | Provider — Yoga, Ho Chi Minh City, Tier 1 verified |
 | `duc.nguyen@example.com` | Provider — Strength coaching, Ho Chi Minh City, Tier 1 verified |
 | `chioma.okafor@example.com` | Provider — HIIT & nutrition, Lagos, Tier 1 verified |
-| `admin@wellnessbyvelosafe.app` | Admin — can confirm provider verification via `PATCH /api/providers/:id/verification` |
+| `admin@wellnessbyvelosafe.app` | Admin — can confirm provider verification via `PATCH /api/providers/:id/verification`, and view System Health at `/admin/ops` |
 
 ## Project structure
 
@@ -119,3 +154,10 @@ docs/        Architecture notes and the build plan this MVP was built from
   and the honest reasoning behind the choices that aren't fully "real" yet (payments,
   verification tiers 2/3).
 - `docs/mvp-build-plan.md` — the planning doc this build started from.
+
+## About
+
+Built by **Jeremiah Ndidi Erue**, founder of Velosafe Technologies Ltd.
+
+Interested in the product, the architecture, or a conversation about either —
+[let's connect on LinkedIn](https://www.linkedin.com/in/jeremiah-ndidi-erue).
