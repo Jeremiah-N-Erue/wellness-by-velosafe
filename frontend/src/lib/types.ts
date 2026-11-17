@@ -127,6 +127,46 @@ export interface Conversation {
   messages: Message[];
 }
 
+export interface OpsRouteStat {
+  route: string;
+  count: number;
+  avgMs: number;
+  errorCount: number;
+}
+
+export interface OpsRecentRequest {
+  at: string;
+  method: string;
+  path: string;
+  status: number;
+  ms: number;
+}
+
+export interface OpsOverview {
+  service: string;
+  status: "ok" | "degraded";
+  time: string;
+  startedAt: string;
+  uptimeSeconds: number;
+  node: { version: string; platform: string; env: string };
+  deployment: {
+    commit: string | null;
+    branch: string | null;
+    serviceName: string | null;
+    instanceId: string | null;
+  };
+  memory: { rssMb: number; heapUsedMb: number; heapTotalMb: number };
+  database: { status: "ok" | "error"; latencyMs: number | null; error: string | null };
+  requests: {
+    total: number;
+    byStatusClass: Record<"2xx" | "3xx" | "4xx" | "5xx", number>;
+    errorRate: number;
+    avgResponseTimeMs: number;
+    topRoutes: OpsRouteStat[];
+  };
+  recentRequests: OpsRecentRequest[];
+}
+
 export interface Message {
   id: string;
   senderId: string;

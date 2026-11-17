@@ -21,6 +21,7 @@ export default function Layout() {
           {user?.role === "CLIENT" && <NavLink to="/dashboard">{t("nav.myDashboard")}</NavLink>}
           {user?.role === "PROVIDER" && <NavLink to="/provider">{t("nav.providerConsole")}</NavLink>}
           {user?.role === "ADMIN" && <NavLink to="/admin">{t("nav.adminConsole")}</NavLink>}
+          {user?.role === "ADMIN" && <NavLink to="/admin/ops">{t("nav.systemHealth")}</NavLink>}
           {user && <NavLink to="/messages">{t("nav.messages")}</NavLink>}
 
           <select

@@ -14,10 +14,16 @@ import { reviewsRouter } from "./routes/reviews.js";
 import { favoritesRouter } from "./routes/favorites.js";
 import { notificationsRouter } from "./routes/notifications.js";
 import { aiRouter } from "./routes/ai.js";
+import { adminRouter } from "./routes/admin.js";
+import { requestMetricsMiddleware } from "./lib/metrics.js";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Mounted early so it wraps every request (health checks and 404s included) and still sees
+// the final status code — see lib/metrics.ts for why this is in-memory, not persisted.
+app.use(requestMetricsMiddleware);
 
 // Serves /logo.png and /favicon.ico (same brand mark used by the frontend) so the API
 // identifies itself visually too — e.g. to anyone opening the bare API URL in a browser.
@@ -52,6 +58,7 @@ app.use("/api/reviews", reviewsRouter);
 app.use("/api/favorites", favoritesRouter);
 app.use("/api/notifications", notificationsRouter);
 app.use("/api/ai", aiRouter);
+app.use("/api/admin", adminRouter);
 
 // Centralized error handler so an unexpected throw returns JSON, not an HTML stack trace.
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

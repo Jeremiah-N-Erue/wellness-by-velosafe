@@ -36,6 +36,11 @@ take up to a minute to wake up — that's expected, not a bug.
 - **Provider discovery** — search/filter by market, category, and keyword.
 - **3-tier verification (Tier 1 live)** — ID + certification + reference contact + signed
   code of conduct, confirmed by an admin before a provider is bookable with full trust.
+- **Admin Console & System Health dashboard** — a marketplace stats overview and the
+  Tier-1 verification workflow for admins at `/admin`, plus a real backend operations
+  dashboard at `/admin/ops` (request volume, error rate, response times, database
+  connectivity, memory, deployment info) — see `docs/architecture.md` for how it's built
+  and its one honest limitation (in-memory, resets on restart).
 - **Credit-pack bookings, scoped per market** — buy a pack in VND or NGN, book sessions
   against that market's balance, cancel for a refund. No subscriptions (the payment rails
   this will eventually run on don't reliably support recurring billing for a merchant in

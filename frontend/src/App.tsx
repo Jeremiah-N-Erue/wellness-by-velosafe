@@ -10,6 +10,7 @@ import ProviderProfilePage from "./pages/ProviderProfilePage";
 import ClientDashboardPage from "./pages/ClientDashboardPage";
 import ProviderDashboardPage from "./pages/ProviderDashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
+import AdminOpsPage from "./pages/AdminOpsPage";
 import MessagesPage from "./pages/MessagesPage";
 import ShopPage from "./pages/ShopPage";
 import BookingPage from "./pages/BookingPage";
@@ -64,6 +65,14 @@ export default function App() {
               element={
                 <ProtectedRoute role="ADMIN">
                   <AdminDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/ops"
+              element={
+                <ProtectedRoute role="ADMIN">
+                  <AdminOpsPage />
                 </ProtectedRoute>
               }
             />

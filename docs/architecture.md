@@ -129,6 +129,28 @@ matches, so it never returns empty), and ranks real providers within them by cus
 rating, then trust score, then session count — returning a plain-language rationale and
 an explicit disclaimer that it is not a medical professional.
 
+## System Health: the backend operations dashboard
+
+`GET /api/admin/ops` (admin-only) backs a "System Health" page at `/admin/ops`, separate
+from the business-facing Admin Console (`/admin`) — this one is about the API process
+itself, not marketplace data. It reports: process uptime and start time; a live database
+check (`SELECT 1`, with latency); Node version/platform/environment; Render's own
+deployment metadata when running there (`RENDER_GIT_COMMIT`, `RENDER_GIT_BRANCH`, etc. —
+`null` when run locally, which is the honest signal that this isn't deployed
+infrastructure); process memory (RSS/heap); and request metrics since the process started
+— total requests, status-code breakdown, error rate, average response time, the busiest
+routes, and a feed of the most recent requests.
+
+The request metrics are deliberately in-memory, not persisted to the database:
+`backend/src/lib/metrics.ts` is middleware mounted once, early, that tallies every request
+on `res.on("finish")`, keyed by the matched route pattern (e.g. `GET /api/providers/:id`,
+not one row per real id, so it can't grow unbounded). This was a conscious tradeoff over
+writing a row to Postgres per request — that would mean a database write on every single
+API call just to populate a dashboard, real overhead for a free-tier MVP. The honest cost:
+Render's free plan spins this service down after ~15 minutes of inactivity, so these
+numbers reset on every wake-up — the dashboard states this plainly rather than presenting
+"since last restart" counts as if they were long-term history.
+
 ## Language support: what's translated and what isn't
 
 The frontend is wired up with `react-i18next` and ships four languages — English,
