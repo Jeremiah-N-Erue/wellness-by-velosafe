@@ -43,12 +43,12 @@ export default function HomePage() {
               placeholder={t("home.searchPlaceholder")}
               aria-label={t("home.searchPlaceholder")}
             />
-            <button className="btn btn-gold" type="submit">{t("home.searchCta")}</button>
+            <button className="btn btn-gold btn-bold" type="submit">{t("home.searchCta")}</button>
           </form>
 
           <div className="hero-ctas">
-            <Link to="/discover" className="btn btn-gold">{t("home.findCoach")}</Link>
-            <Link to="/register" className="btn btn-ghost-light">{t("home.joinAsProvider")}</Link>
+            <Link to="/discover" className="btn btn-gold btn-bold">{t("home.findCoach")}</Link>
+            <Link to="/register" className="btn btn-ghost-light btn-bold">{t("home.joinAsProvider")}</Link>
           </div>
 
           <div className="hero-stats">
@@ -78,8 +78,13 @@ export default function HomePage() {
         </div>
 
         <div className="section">
-          <span className="section-eyebrow">{t("home.categoriesEyebrow")}</span>
-          <h2 className="section-title">{t("home.categoriesTitle")}</h2>
+          <div className="section-head">
+            <div>
+              <span className="section-eyebrow">{t("home.categoriesEyebrow")}</span>
+              <h2 className="section-title">{t("home.categoriesTitle")}</h2>
+            </div>
+            <Link to="/discover" className="section-link">{t("home.viewAllCategories")} →</Link>
+          </div>
           <div className="category-grid" style={{ marginTop: "1rem" }}>
             {CATEGORY_TILES.map((tile) =>
               tile.isShop ? (
@@ -101,8 +106,13 @@ export default function HomePage() {
 
         {featured.length > 0 && (
           <div className="section">
-            <span className="section-eyebrow">{t("home.featuredEyebrow")}</span>
-            <h2 className="section-title">{t("home.featuredTitle")}</h2>
+            <div className="section-head">
+              <div>
+                <span className="section-eyebrow">{t("home.featuredEyebrow")}</span>
+                <h2 className="section-title">{t("home.featuredTitle")}</h2>
+              </div>
+              <Link to="/discover" className="section-link">{t("home.viewAllProviders")} →</Link>
+            </div>
             <div className="grid grid-cards" style={{ marginTop: "1rem" }}>
               {featured.map((p) => (
                 <ProviderCard key={p.id} provider={p} />
@@ -138,7 +148,7 @@ export default function HomePage() {
             <h2 style={{ margin: "0 0 0.3rem", color: "white" }}>{t("home.providerCtaTitle")}</h2>
             <p style={{ margin: 0, color: "var(--sage-light)" }}>{t("home.providerCtaBody")}</p>
           </div>
-          <Link to="/register" className="btn btn-gold">{t("home.providerCtaButton")}</Link>
+          <Link to="/register" className="btn btn-gold btn-bold">{t("home.providerCtaButton")}</Link>
         </div>
       </div>
     </div>

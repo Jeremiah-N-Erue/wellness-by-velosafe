@@ -46,7 +46,7 @@ export default function Layout() {
           ) : (
             <>
               <NavLink to="/login">{t("nav.login")}</NavLink>
-              <NavLink to="/register" className="pill">{t("nav.signup")}</NavLink>
+              <NavLink to="/register" className="pill nav-cta">{t("nav.signup")}</NavLink>
             </>
           )}
         </nav>
