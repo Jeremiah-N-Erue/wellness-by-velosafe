@@ -56,9 +56,10 @@ export function requestMetricsMiddleware(req: Request, res: Response, next: Next
     // req.route is only populated once Express has matched a router's route, which gives a
     // normalized key like "GET /api/providers/:id" instead of one row per real provider id.
     // Unmatched requests (404s) fall back to the raw path — fine, since those are rare.
-    const routeKey = req.route
-      ? `${req.method} ${req.baseUrl}${req.route.path === "/" ? "" : req.route.path}`
-      : `${req.method} ${req.path}`;
+    const matchedPath = req.route
+      ? `${req.baseUrl}${req.route.path === "/" ? "" : req.route.path}` || "/"
+      : req.path;
+    const routeKey = `${req.method} ${matchedPath}`;
 
     const existing = state.routeStats.get(routeKey) || { count: 0, totalMs: 0, errors: 0 };
     existing.count += 1;
