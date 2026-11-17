@@ -15,12 +15,15 @@ At the same time, the founder's direction was to keep the platform's architectur
 than "wellness, hardcoded," so that other verticals (tours, visa/relocation help, real
 estate, etc.) are a data problem, not a rewrite, when the team is ready for them. The
 schema reflects that: `ServiceCategory` is a first-class, data-driven model with feature
-flags (`requiresVerification`, `hasProgressTracking`). Only the `wellness` category has
-those flags turned on and its full operating model built — verification, credit-pack
-bookings, the Progress & Goals engine. Two more categories exist in the seed data
-(`tours-experiences`, `relocation-visa`) specifically to prove this isn't a label on top of
-wellness-only code; they're marked inactive because no one has designed their operating
-rules yet.
+flags (`requiresVerification`, `hasProgressTracking`). The original single `wellness`
+catch-all category has since been split into five specific, active categories — Personal
+Training, Yoga & Mindfulness, Wellness Coaching, Fitness Classes, and Digital Programmes —
+each carrying the same operating model the old category had: verification, credit-pack
+bookings, the Progress & Goals engine. The old `wellness` row is retired (`isActive:
+false`) rather than deleted, so historical data referencing it stays intact. Two more
+non-wellness categories exist in the seed data (`tours-experiences`, `relocation-visa`)
+specifically to prove this isn't a label on top of wellness-only code; they're marked
+inactive because no one has designed their operating rules yet.
 
 ## Why two countries, and why country-agnostic too
 
@@ -102,6 +105,29 @@ flips to `POST_BOOKING` and the filter stops applying. The documented plan calls
 migrating to a hosted chat SDK (Stream/Sendbird) and adding proxy-number masked calling in
 Phase 2 — this MVP's filter is the lightweight v1 version of the same policy, not the final
 infrastructure.
+
+## Reviews, favourites, in-app notifications, and the Wellness AI recommender
+
+Added after the sections above. A `Review` is 1:1 with a completed `Booking`
+(`bookingId` is unique) — a client can only review a specific session they actually had,
+never a free-floating rating, and never more than once per booking. `ProviderProfile`
+aggregates these into `ratingAvg`/`ratingCount`, kept deliberately separate from
+`trustScore` (the platform/verification signal) and `sessionCount`.
+
+`Favorite` is a simple client-to-provider bookmark (compound-unique on client+provider,
+upserted so toggling never errors). `Notification` is written only from real event
+points — booking confirmed/cancelled, progress logged, a new message received, Tier-1
+verification completed — never synthetic/decorative data, and surfaced via a polling
+navbar bell with an unread-count badge.
+
+"VeloSafe Wellness AI" (`POST /api/ai/recommend`) is a deliberately transparent,
+rule-based recommender, not an LLM call — the founder's explicit choice, to avoid both a
+new API-key dependency and a black-box result in a wellness/health context. It matches
+keywords in the client's stated goal text against a hardcoded per-category keyword map,
+takes the top matching categories (falling back to all active categories if nothing
+matches, so it never returns empty), and ranks real providers within them by customer
+rating, then trust score, then session count — returning a plain-language rationale and
+an explicit disclaimer that it is not a medical professional.
 
 ## Language support: what's translated and what isn't
 
